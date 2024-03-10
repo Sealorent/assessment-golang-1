@@ -39,19 +39,20 @@ func main() {
 		panic(err)
 	}
 
-	err = db.AutoMigrate(&model.Person{}, &model.CreditCard{})
+	err = db.AutoMigrate(&model.Order{}, &model.Item{})
 	if err != nil {
 		panic(err)
 	}
 
-	personRepository := repository.NewPersonRepository(db)
-	personController := controller.NewPersonController(personRepository)
+	orderRepository := repository.NewOrderRepository(db)
+	orderController := controller.NewOrderController(orderRepository)
 
 	ginEngine := gin.Default()
 
-	ginEngine.GET("/person", personController.GetAll)
-	ginEngine.POST("/person", personController.Create)
-	ginEngine.DELETE("/person/:id", personController.Delete)
+	ginEngine.POST("/order", orderController.Create)
+	ginEngine.GET("/order", orderController.Get)
+	ginEngine.PUT("/order/:id", orderController.Update)
+	ginEngine.DELETE("/order/:id", orderController.Delete)
 
 	ginEngine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 

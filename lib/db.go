@@ -6,6 +6,6 @@ import (
 )
 
 func InitDatabase() (*gorm.DB, error) {
-	connectionString := "host=localhost port=5432 user=postgres password=password dbname=hacktiv sslmode=disable"
+	connectionString := "host=173.212.232.47 port=2670 user=postgres password=postgres dbname=db-golang sslmode=disable"
 	return gorm.Open(postgres.Open(connectionString), &gorm.Config{})
 }

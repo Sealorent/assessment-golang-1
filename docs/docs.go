@@ -24,9 +24,9 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/person": {
-            "get": {
-                "description": "get all person",
+        "/order": {
+            "post": {
+                "description": "Create Order",
                 "consumes": [
                     "application/json"
                 ],
@@ -34,17 +34,25 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "person"
+                    "order"
                 ],
-                "summary": "Get All Person",
+                "summary": "Create Order",
+                "parameters": [
+                    {
+                        "description": "query params",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.OrderHandler.request"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.Person"
-                            }
+                            "$ref": "#/definitions/model.OrderHandler.response"
                         }
                     }
                 }
@@ -52,16 +60,76 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "model.Person": {
+        "model.Item": {
             "type": "object",
             "properties": {
-                "address": {
+                "created_at": {
+                    "type": "string"
+                },
+                "description": {
                     "type": "string"
                 },
                 "id": {
                     "type": "integer"
                 },
-                "name": {
+                "item_code": {
+                    "type": "string"
+                },
+                "order_uuid": {
+                    "type": "string"
+                },
+                "quantity": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.ItemDTO": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "item_code": {
+                    "type": "string"
+                },
+                "quantity": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.OrderHandler.request": {
+            "type": "object",
+            "properties": {
+                "customer_name": {
+                    "type": "string"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.ItemDTO"
+                    }
+                },
+                "ordered_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.OrderHandler.response": {
+            "type": "object",
+            "properties": {
+                "customer_name": {
+                    "type": "string"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Item"
+                    }
+                },
+                "ordered_at": {
                     "type": "string"
                 },
                 "uuid": {
