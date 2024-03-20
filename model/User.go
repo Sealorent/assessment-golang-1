@@ -20,6 +20,17 @@ type User struct {
 	Status    bool      `json:"status" gorm:"default:true"`
 }
 
+type UserRefer struct {
+	Email    string `json:"email"`
+	Username string `json:"username"`
+}
+
+type UserReferComment struct {
+	ID       string `json:"id"`
+	Email    string `json:"email"`
+	Username string `json:"username"`
+}
+
 // create uuid for user
 func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
 	u.ID = uuid.NewString()

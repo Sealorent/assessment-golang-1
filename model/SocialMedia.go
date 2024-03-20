@@ -21,6 +21,7 @@ type SocialMedia struct {
 	UserId         string    `json:"user_id" gorm:"foreignKey:UserRefer"`
 	CreatedAt      time.Time `json:"created_at"`
 	UpdatedAt      time.Time `json:"updated_at"`
+	Status         bool      `json:"status" gorm:"default:true"`
 }
 
 // Validate validates the SocialMedia struct

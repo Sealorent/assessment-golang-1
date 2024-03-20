@@ -5,6 +5,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -71,4 +72,19 @@ func GetSubFromClaims(claims any) (any, error) {
 	}
 
 	return sub, nil
+}
+
+func CheckTokenJWTAndReturnSub(ctx *gin.Context) (string, error) {
+	claims, exist := ctx.Get("claims")
+	if !exist {
+		return "", errors.New("unauthorized")
+	}
+
+	sub, err := GetSubFromClaims(claims)
+	if err != nil {
+		return "", errors.New("unauthorized")
+	}
+
+	return sub.(string), nil
+
 }

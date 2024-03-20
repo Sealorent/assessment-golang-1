@@ -5,6 +5,7 @@ import (
 	"final_project/controller/user_control"
 	"final_project/lib"
 	"final_project/middleware"
+	"final_project/model"
 	"final_project/repository/photo_repo"
 	"final_project/repository/user_repo"
 	"fmt"
@@ -29,10 +30,10 @@ func main() {
 	}
 
 	// migrate the schema
-	// err = db.AutoMigrate(&model.User{}, &model.Photo{}, &model.Comment{}, &model.SocialMedia{})
-	// if err != nil {
-	// 	panic(err)
-	// }
+	err = db.AutoMigrate(&model.User{}, &model.Photo{}, &model.Comment{}, &model.SocialMedia{})
+	if err != nil {
+		panic(err)
+	}
 
 	userRepository := user_repo.NewUserRepository(db)
 	userController := user_control.NewUserController(userRepository)
@@ -44,14 +45,17 @@ func main() {
 	ginEngine.POST("/auth/register", userController.Register)
 	ginEngine.POST("/auth/login", userController.Login)
 
+	// USER
 	userGroup := ginEngine.Group("/users", middleware.AuthMiddleware)
-
 	userGroup.PUT("", userController.UpdateUser)
 	userGroup.DELETE("", userController.DeleteUser)
 
+	// PHOTO
 	photoGroup := ginEngine.Group("/photos", middleware.AuthMiddleware)
 	photoGroup.POST("", photoController.Create)
-	photoGroup.GET("", photoController.FindAll)
+	photoGroup.PUT("", photoController.UpdateOne)
+	photoGroup.DELETE("", photoController.Delete)
+	ginEngine.GET("/photos", photoController.FindAll)
 
 	// Host and port
 	serverHost := os.Getenv("APP_HOST")
