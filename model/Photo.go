@@ -26,7 +26,7 @@ type Photo struct {
 	Title     string    `json:"title" gorm:"not null" validate:"required"`
 	Caption   string    `json:"caption"`
 	PhotoUrl  string    `json:"photo_url" gorm:"not null" validate:"required"`
-	UserId    uint      `json:"user_id" gorm:"foreignKey:UserRefer"`
+	UserId    string    `json:"user_id" gorm:"foreignKey:UserRefer"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }

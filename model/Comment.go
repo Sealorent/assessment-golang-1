@@ -14,7 +14,7 @@ import (
 
 type Comment struct {
 	Id        uint      `json:"id" gorm:"primaryKey"`
-	UserId    uint      `json:"user_id" gorm:"foreignKey:UserRefer" validate:"required"`
+	UserId    string    `json:"user_id" gorm:"foreignKey:UserRefer" validate:"required"`
 	PhotoId   uint      `json:"photo_id"`
 	Message   string    `json:"message" gorm:"not null" validate:"required"`
 	CreatedAt time.Time `json:"created_at"`

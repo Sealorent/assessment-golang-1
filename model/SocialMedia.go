@@ -18,7 +18,7 @@ type SocialMedia struct {
 	Id             uint      `json:"id" gorm:"primaryKey"`
 	Name           string    `json:"name" gorm:"not null" validate:"required"`
 	SocialMediaUrl string    `json:"social_media_url" gorm:"not null" validate:"required"`
-	UserId         uint      `json:"user_id" gorm:"foreignKey:UserRefer"`
+	UserId         string    `json:"user_id" gorm:"foreignKey:UserRefer"`
 	CreatedAt      time.Time `json:"created_at"`
 	UpdatedAt      time.Time `json:"updated_at"`
 }
