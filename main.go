@@ -1,11 +1,13 @@
 package main
 
 import (
+	"final_project/controller/comment_control"
 	"final_project/controller/photo_control"
 	"final_project/controller/user_control"
 	"final_project/lib"
 	"final_project/middleware"
 	"final_project/model"
+	"final_project/repository/comment_repo"
 	"final_project/repository/photo_repo"
 	"final_project/repository/user_repo"
 	"fmt"
@@ -34,12 +36,15 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
+	// USER
 	userRepository := user_repo.NewUserRepository(db)
 	userController := user_control.NewUserController(userRepository)
-
+	// PHOTO
 	photoRepository := photo_repo.NewPhotoRepository(db)
 	photoController := photo_control.NewPhotoController(photoRepository)
+	// COMMENT
+	commentRepository := comment_repo.NewCommentRepository(db)
+	commentController := comment_control.NewCommentController(commentRepository)
 
 	ginEngine := gin.Default()
 	ginEngine.POST("/auth/register", userController.Register)
@@ -56,6 +61,13 @@ func main() {
 	photoGroup.PUT("", photoController.UpdateOne)
 	photoGroup.DELETE("", photoController.Delete)
 	ginEngine.GET("/photos", photoController.FindAll)
+
+	// COMMENT
+	commentGroup := ginEngine.Group("/comments", middleware.AuthMiddleware)
+	commentGroup.POST("", commentController.CreateComment)
+	commentGroup.PUT("", commentController.Update)
+	commentGroup.DELETE("", commentController.Delete)
+	commentGroup.GET("", commentController.GetAll)
 
 	// Host and port
 	serverHost := os.Getenv("APP_HOST")

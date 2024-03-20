@@ -13,7 +13,7 @@ func GenerateJWTToken(userId string, emailUser string, userName string) (string,
 
 	claims := jwt.MapClaims{
 		"sub": userId,
-		"exp": time.Now().Add(5 * time.Minute).Unix(),
+		"exp": time.Now().Add(20 * time.Minute).Unix(),
 		"context": map[string]interface{}{
 			"email":    emailUser,
 			"username": userName,

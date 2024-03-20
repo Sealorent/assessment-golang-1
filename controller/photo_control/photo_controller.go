@@ -27,7 +27,7 @@ func (uc *PhotoController) Create(ctx *gin.Context) {
 		var r common.Response = common.Response{
 			Success: false,
 			Message: "Unauthorized",
-			Error:   "unauthorized",
+			Error:   err.Error(),
 		}
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, r)
 		return
@@ -48,7 +48,7 @@ func (uc *PhotoController) Create(ctx *gin.Context) {
 		return
 	}
 
-	newPhoto.UserID = sub.(string)
+	newPhoto.UserID = sub
 	createdPhoto, err := uc.photoRepository.Create(newPhoto)
 	if err != nil {
 		var r common.Response = common.Response{
