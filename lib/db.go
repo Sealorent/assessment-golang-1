@@ -5,18 +5,12 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 func InitDB() (*gorm.DB, error) {
 
-	err := godotenv.Load(".env")
-	if err != nil {
-		return nil, err
-	}
-	fmt.Println("DB_USER: ", os.Getenv("DB_USER"))
 	dbUser := os.Getenv("DB_USER")
 	dbPassword := os.Getenv("DB_PASSWORD")
 	dbName := os.Getenv("DB_DBNAME")
