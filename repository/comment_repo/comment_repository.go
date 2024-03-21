@@ -3,7 +3,6 @@ package comment_repo
 import (
 	"errors"
 	"final_project/model"
-	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -58,11 +57,9 @@ func (ur *commentRepository) Update(comment model.Comment, commentId string, use
 	// Make begin transaction
 	tx := ur.db.Begin()
 
-	fmt.Println("commentId", commentId)
-
 	// 1. Find comment by id
 	var existingComment model.Comment
-	if err := tx.Where("id = ? AND user_id = ? AND status = true", 42, userId).First(&existingComment).Error; err != nil {
+	if err := tx.Where("id = ? AND user_id = ? AND status = true", commentId, userId).First(&existingComment).Error; err != nil {
 		tx.Rollback()
 		return model.Comment{}, errors.New("comment not found or you don't have permission to update this comment")
 	}
@@ -97,6 +94,22 @@ func (cc *commentRepository) GetAll() ([]model.Comment, error) {
 		return []model.Comment{}, tx.Error
 	}
 	return comments, nil
+}
+
+func (cc *commentRepository) GetOne(commentId string) (model.Comment, error) {
+
+	var comment model.Comment
+
+	tx := cc.db.Where("id = ?", commentId).Preload("User").Preload("Photo").Find(&comment)
+	if tx.Error != nil {
+		return model.Comment{}, tx.Error
+	}
+
+	if !comment.Status {
+		return model.Comment{}, errors.New("comment not found")
+	}
+
+	return comment, nil
 }
 
 func (cc *commentRepository) Delete(commentId string, userId string) error {

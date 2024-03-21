@@ -31,7 +31,7 @@ func AuthMiddleware(ctx *gin.Context) {
 	if err != nil {
 		var r common.Response = common.Response{
 			Success: false,
-			Message: "Invalid token",
+			Message: "Unauthorized User",
 			Error:   err.Error(),
 		}
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, r)

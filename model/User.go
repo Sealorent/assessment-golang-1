@@ -31,6 +31,11 @@ type UserReferComment struct {
 	Username string `json:"username"`
 }
 
+type UserReferSocialMedia struct {
+	ID       string `json:"id"`
+	Username string `json:"username"`
+}
+
 // create uuid for user
 func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
 	u.ID = uuid.NewString()

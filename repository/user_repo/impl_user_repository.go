@@ -9,6 +9,4 @@ type IUserRepository interface {
 	UserByEmail(string) (model.User, error)
 	UpdateUser(updateUser model.User, id string) (model.User, error)
 	DeleteUser(id string) error
-	// GetAll() ([]model.User, error)
-	// Delete(uuid string) error
 }

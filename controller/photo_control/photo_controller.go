@@ -84,6 +84,27 @@ func (uc *PhotoController) Create(ctx *gin.Context) {
 }
 
 func (uc *PhotoController) FindAll(ctx *gin.Context) {
+	userId, err := utils.CheckTokenJWTAndReturnSub(ctx)
+	if err != nil {
+		var r common.Response = common.Response{
+			Success: false,
+			Message: "Unauthorized User",
+			Error:   err.Error(),
+		}
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, r)
+		return
+	}
+
+	if userId == "" {
+		var r common.Response = common.Response{
+			Success: false,
+			Message: "Unauthorized",
+			Error:   "Unauthorized",
+		}
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, r)
+		return
+	}
+
 	photos, err := uc.photoRepository.FindAll()
 	if err != nil {
 		var r common.Response = common.Response{
@@ -119,21 +140,77 @@ func (uc *PhotoController) FindAll(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, r)
 }
 
-func (uc *PhotoController) UpdateOne(ctx *gin.Context) {
-	claims, exist := ctx.Get("claims")
-	if !exist {
+func (uc *PhotoController) FindOne(ctx *gin.Context) {
+
+	userId, err := utils.CheckTokenJWTAndReturnSub(ctx)
+	if err != nil {
 		var r common.Response = common.Response{
 			Success: false,
-			Message: "Unauthorized",
-			Error:   "unauthorized",
+			Message: "Unauthorized User",
+			Error:   err.Error(),
 		}
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, r)
 		return
 	}
 
-	sub, err := utils.GetSubFromClaims(claims)
+	if userId == "" {
+		var r common.Response = common.Response{
+			Success: false,
+			Message: "Unauthorized",
+			Error:   "Unauthorized",
+		}
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, r)
+		return
+	}
+
+	var photoId = ctx.Param("photoId")
+
+	photo, err := uc.photoRepository.FindOne(photoId)
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusUnauthorized, common.CreateResponse(false, "Unauthorized", nil, "unauthorized"))
+		var r common.Response = common.Response{
+			Success: false,
+			Message: "Failed to get photo",
+			Error:   err.Error(),
+		}
+		ctx.AbortWithStatusJSON(400, r)
+		return
+	}
+
+	type PhotoResponse struct {
+		ID        uint   `json:"id"`
+		Title     string `json:"title"`
+		Caption   string `json:"caption"`
+		PhotoUrl  string `json:"photo_url"`
+		UserId    string `json:"user_id"`
+		CreatedAt string `json:"created_at"`
+		UpdatedAt string `json:"updated_at"`
+	}
+
+	response := PhotoResponse{
+		ID:        photo.Id,
+		Title:     photo.Title,
+		Caption:   photo.Caption,
+		PhotoUrl:  photo.PhotoUrl,
+		UserId:    photo.UserID,
+		CreatedAt: photo.CreatedAt.String(),
+		UpdatedAt: photo.UpdatedAt.String(),
+	}
+
+	var r common.Response = common.CreateResponse(true, "Success", response, "")
+
+	ctx.JSON(http.StatusOK, r)
+
+}
+
+func (uc *PhotoController) UpdateOne(ctx *gin.Context) {
+	userId, err := utils.CheckTokenJWTAndReturnSub(ctx)
+	if err != nil {
+		var r common.Response = common.Response{
+			Success: false,
+			Message: "Unauthorized User",
+			Error:   err.Error(),
+		}
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, r)
 		return
 	}
 
@@ -148,8 +225,8 @@ func (uc *PhotoController) UpdateOne(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, r)
 		return
 	}
-	var photoId = ctx.Query("photoId")
-	var userId = sub.(string)
+
+	var photoId = ctx.Param("photoId")
 
 	updatePhoto, err := uc.photoRepository.UpdateOne(request, photoId, userId)
 	if err != nil {
@@ -204,7 +281,7 @@ func (uc *PhotoController) Delete(ctx *gin.Context) {
 		return
 	}
 
-	var photoId = ctx.Query("photoId")
+	var photoId = ctx.Param("photoId")
 	var userId = sub.(string)
 
 	err = uc.photoRepository.Delete(photoId, userId)

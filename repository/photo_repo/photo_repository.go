@@ -46,6 +46,21 @@ func (ur *photoRepository) FindAll() ([]model.Photo, error) {
 	return photos, nil
 }
 
+func (ur *photoRepository) FindOne(photoId string) (model.Photo, error) {
+
+	var photos model.Photo
+	tx := ur.db.Where("id = ?", photoId).Preload("User").First(&photos)
+	if tx.Error != nil {
+		return model.Photo{}, tx.Error
+	}
+
+	if !photos.Status {
+		return model.Photo{}, errors.New("photo not found")
+	}
+
+	return photos, nil
+}
+
 func (ur *photoRepository) UpdateOne(photo model.Photo, photoId string, userId string) (model.Photo, error) {
 
 	// Make begin transaction

@@ -3,12 +3,14 @@ package main
 import (
 	"final_project/controller/comment_control"
 	"final_project/controller/photo_control"
+	"final_project/controller/social_media_control"
 	"final_project/controller/user_control"
 	"final_project/lib"
 	"final_project/middleware"
 	"final_project/model"
 	"final_project/repository/comment_repo"
 	"final_project/repository/photo_repo"
+	"final_project/repository/social_media_repo"
 	"final_project/repository/user_repo"
 	"fmt"
 	"os"
@@ -45,7 +47,11 @@ func main() {
 	// COMMENT
 	commentRepository := comment_repo.NewCommentRepository(db)
 	commentController := comment_control.NewCommentController(commentRepository)
+	// SOCIAL MEDIA
+	socialMediaRepository := social_media_repo.NewSocialMediaRepository(db)
+	socialMediaController := social_media_control.NewSocialMediaController(socialMediaRepository)
 
+	// ROUTES
 	ginEngine := gin.Default()
 	ginEngine.POST("/auth/register", userController.Register)
 	ginEngine.POST("/auth/login", userController.Login)
@@ -58,16 +64,26 @@ func main() {
 	// PHOTO
 	photoGroup := ginEngine.Group("/photos", middleware.AuthMiddleware)
 	photoGroup.POST("", photoController.Create)
-	photoGroup.PUT("", photoController.UpdateOne)
-	photoGroup.DELETE("", photoController.Delete)
-	ginEngine.GET("/photos", photoController.FindAll)
+	photoGroup.GET("", photoController.FindAll)
+	photoGroup.GET("/:photoId", photoController.FindOne)
+	photoGroup.PUT("/:photoId", photoController.UpdateOne)
+	photoGroup.DELETE("/:photoId", photoController.Delete)
 
 	// COMMENT
 	commentGroup := ginEngine.Group("/comments", middleware.AuthMiddleware)
 	commentGroup.POST("", commentController.CreateComment)
-	commentGroup.PUT("", commentController.Update)
-	commentGroup.DELETE("", commentController.Delete)
 	commentGroup.GET("", commentController.GetAll)
+	commentGroup.GET("/:commentId", commentController.GetOne)
+	commentGroup.PUT("/:commentId", commentController.Update)
+	commentGroup.DELETE("/:commentId", commentController.Delete)
+
+	// SOCIAL MEDIA
+	socialMediaGroup := ginEngine.Group("/social-media", middleware.AuthMiddleware)
+	socialMediaGroup.POST("", socialMediaController.Create)
+	socialMediaGroup.GET("", socialMediaController.FindAll)
+	socialMediaGroup.GET("/:socialMediaId", socialMediaController.FindOne)
+	socialMediaGroup.PUT("/:socialMediaId", socialMediaController.UpdateOne)
+	socialMediaGroup.DELETE("/:socialMediaId", socialMediaController.Delete)
 
 	// Host and port
 	serverHost := os.Getenv("APP_HOST")

@@ -146,8 +146,73 @@ func (cc *commentController) GetAll(ctx *gin.Context) {
 
 }
 
+func (cc *commentController) GetOne(ctx *gin.Context) {
+	userId, err := utils.CheckTokenJWTAndReturnSub(ctx)
+	if err != nil {
+		var r common.Response = common.Response{
+			Success: false,
+			Message: "Unauthorized",
+			Error:   err.Error(),
+		}
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, r)
+		return
+	}
+
+	if userId == "" {
+		var r common.Response = common.Response{
+			Success: false,
+			Message: "Unauthorized",
+			Error:   "Unauthorized",
+		}
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, r)
+		return
+	}
+
+	commentId := ctx.Param("commentId")
+
+	comment, err := cc.commentRepository.GetOne(commentId)
+	if err != nil {
+		var r common.Response = common.Response{
+			Success: false,
+			Message: "Failed to get comment",
+			Error:   err.Error(),
+		}
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, r)
+		return
+	}
+
+	response := model.CommentResult{
+		ID:        comment.Id,
+		Message:   comment.Message,
+		PhotoId:   comment.PhotoId,
+		UserID:    comment.UserId,
+		CreatedAt: comment.CreatedAt.String(),
+		UpdatedAt: comment.UpdatedAt.String(),
+		User: model.UserReferComment{
+			ID:       comment.User.ID,
+			Username: comment.User.Username,
+			Email:    comment.User.Email,
+		},
+		Photo: model.PhotoReferComment{
+			ID:       comment.Photo.Id,
+			Title:    comment.Photo.Title,
+			Caption:  comment.Photo.Caption,
+			PhotoUrl: comment.Photo.PhotoUrl,
+			UserID:   comment.Photo.UserID,
+		},
+	}
+
+	var r common.Response = common.Response{
+		Success: true,
+		Message: "Success",
+		Data:    response,
+	}
+
+	ctx.JSON(http.StatusOK, r)
+}
+
 func (cc *commentController) Update(ctx *gin.Context) {
-	sub, err := utils.CheckTokenJWTAndReturnSub(ctx)
+	userId, err := utils.CheckTokenJWTAndReturnSub(ctx)
 	if err != nil {
 		var r common.Response = common.Response{
 			Success: false,
@@ -170,9 +235,7 @@ func (cc *commentController) Update(ctx *gin.Context) {
 		return
 	}
 
-	commentId := ctx.Query("commentId")
-	userId := sub
-
+	commentId := ctx.Param("commentId")
 	updatedComment, err := cc.commentRepository.Update(comment, commentId, userId)
 	if err != nil {
 		var r common.Response = common.Response{
@@ -197,7 +260,7 @@ func (cc *commentController) Update(ctx *gin.Context) {
 
 	var r common.Response = common.Response{
 		Success: true,
-		Message: "Comment updated",
+		Message: "Comment updated with message: " + updatedComment.Message,
 		Data:    response,
 	}
 
@@ -205,7 +268,7 @@ func (cc *commentController) Update(ctx *gin.Context) {
 }
 
 func (cc *commentController) Delete(ctx *gin.Context) {
-	sub, err := utils.CheckTokenJWTAndReturnSub(ctx)
+	userId, err := utils.CheckTokenJWTAndReturnSub(ctx)
 	if err != nil {
 		var r common.Response = common.Response{
 			Success: false,
@@ -216,8 +279,7 @@ func (cc *commentController) Delete(ctx *gin.Context) {
 		return
 	}
 
-	commentId := ctx.Query("commentId")
-	userId := sub
+	commentId := ctx.Param("commentId")
 
 	err = cc.commentRepository.Delete(commentId, userId)
 	if err != nil {
