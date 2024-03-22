@@ -85,7 +85,7 @@ func main() {
 	socialMediaGroup.DELETE("/:socialMediaId", socialMediaController.Delete)
 
 	// Host and port
-	serverHost := os.Getenv("APP_HOST")
+	serverHost := os.Getenv("SERVER_HOST")
 	serverPort := os.Getenv("PORT")
 	port, err := strconv.Atoi(serverPort)
 	if err != nil {
