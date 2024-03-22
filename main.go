@@ -17,15 +17,14 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 )
 
 func main() {
 	// Load .env file
-	err := godotenv.Load()
-	if err != nil {
-		panic(err)
-	}
+	// // err := godotenv.Load()
+	// if err != nil {
+	// 	panic(err)
+	// }
 
 	// gorm connection
 	db, err := lib.InitDB()
