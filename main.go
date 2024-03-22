@@ -86,7 +86,7 @@ func main() {
 
 	// Host and port
 	serverHost := os.Getenv("APP_HOST")
-	serverPort := os.Getenv("APP_PORT")
+	serverPort := os.Getenv("PORT")
 	port, err := strconv.Atoi(serverPort)
 	if err != nil {
 		panic(err)
