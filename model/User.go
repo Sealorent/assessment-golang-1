@@ -16,7 +16,7 @@ type User struct {
 	Email     string    `json:"email" gorm:"unique;not null" validate:"required,email"`
 	Username  string    `json:"username" gorm:"unique;not null" validate:"required"`
 	Password  string    `json:"password" validate:"required,min=6"`
-	Age       uint      `json:"age" validate:"required,min=8"`
+	Age       uint      `json:"age" validate:"required,min=9"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 	Status    bool      `json:"status" gorm:"default:true"`
@@ -61,7 +61,7 @@ func (u *User) Validate() error {
 		validationErrors = append(validationErrors, "Password is required and must have at least 6 characters")
 	}
 
-	if err := validate.Var(u.Age, "required,min=8"); err != nil {
+	if err := validate.Var(u.Age, "required,min=9"); err != nil {
 		validationErrors = append(validationErrors, "Age is required and must be at least 8")
 	}
 
