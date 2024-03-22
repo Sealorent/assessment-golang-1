@@ -14,7 +14,7 @@ type User struct {
 	Email     string    `json:"email" gorm:"unique;not null" validate:"required,email"`
 	Username  string    `json:"username" gorm:"unique;not null" validate:"required"`
 	Password  string    `json:"password" validate:"required,min=6"`
-	Age       uint      `json:"age" validate:"required,min=9"`
+	Age       uint      `json:"age" validate:"required,min=8"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 	Status    bool      `json:"status" gorm:"default:true"`
