@@ -24,12 +24,22 @@ func NewCommentController(commentRepository comment_repo.ICommentRepository) *co
 // CreateComment is a function to create a new comment
 func (cc *commentController) CreateComment(ctx *gin.Context) {
 
-	sub, err := utils.CheckTokenJWTAndReturnSub(ctx)
+	userId, err := utils.CheckTokenJWTAndReturnSub(ctx)
 	if err != nil {
 		var r common.Response = common.Response{
 			Success: false,
 			Message: "Unauthorized",
 			Error:   err.Error(),
+		}
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, r)
+		return
+	}
+
+	if userId == "" {
+		var r common.Response = common.Response{
+			Success: false,
+			Message: "Unauthorized",
+			Error:   "Unauthorized",
 		}
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, r)
 		return
@@ -47,7 +57,17 @@ func (cc *commentController) CreateComment(ctx *gin.Context) {
 		return
 	}
 
-	newComment.UserId = sub
+	if err := newComment.Validate(); err != nil {
+		var r common.Response = common.Response{
+			Success: false,
+			Message: "Please recheck your input : " + err.Error(),
+			Error:   err.Error(),
+		}
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, r)
+		return
+	}
+
+	newComment.UserId = userId
 	createdComment, err := cc.commentRepository.Create(newComment)
 	if err != nil {
 		var r common.Response = common.Response{

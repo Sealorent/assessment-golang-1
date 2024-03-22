@@ -22,7 +22,7 @@ func NewPhotoController(photoRepository photo_repo.IPhotoRepository) *PhotoContr
 
 func (uc *PhotoController) Create(ctx *gin.Context) {
 
-	sub, err := utils.CheckTokenJWTAndReturnSub(ctx)
+	userId, err := utils.CheckTokenJWTAndReturnSub(ctx)
 	if err != nil {
 		var r common.Response = common.Response{
 			Success: false,
@@ -48,7 +48,18 @@ func (uc *PhotoController) Create(ctx *gin.Context) {
 		return
 	}
 
-	newPhoto.UserID = sub
+	// validate the input
+	if err := newPhoto.Validate(); err != nil {
+		var r common.Response = common.Response{
+			Success: false,
+			Message: "Please recheck your input : " + err.Error(),
+			Error:   err.Error(),
+		}
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, r)
+		return
+	}
+
+	newPhoto.UserID = userId
 	createdPhoto, err := uc.photoRepository.Create(newPhoto)
 	if err != nil {
 		var r common.Response = common.Response{
@@ -264,26 +275,18 @@ func (uc *PhotoController) UpdateOne(ctx *gin.Context) {
 }
 
 func (uc *PhotoController) Delete(ctx *gin.Context) {
-	claims, exist := ctx.Get("claims")
-	if !exist {
+	userId, err := utils.CheckTokenJWTAndReturnSub(ctx)
+	if err != nil {
 		var r common.Response = common.Response{
 			Success: false,
 			Message: "Unauthorized",
-			Error:   "unauthorized",
+			Error:   err.Error(),
 		}
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, r)
 		return
 	}
 
-	sub, err := utils.GetSubFromClaims(claims)
-	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusUnauthorized, common.CreateResponse(false, "Unauthorized", nil, "unauthorized"))
-		return
-	}
-
 	var photoId = ctx.Param("photoId")
-	var userId = sub.(string)
-
 	err = uc.photoRepository.Delete(photoId, userId)
 	if err != nil {
 		var r common.Response = common.Response{

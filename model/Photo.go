@@ -52,10 +52,6 @@ func (p *Photo) Validate() error {
 		validationErrors = append(validationErrors, "Photo url is required")
 	}
 
-	if err := validate.Var(p.UserID, "required"); err != nil {
-		validationErrors = append(validationErrors, "You must sign-in")
-	}
-
 	if len(validationErrors) > 0 {
 		return errors.New(strings.Join(validationErrors, "; "))
 	}

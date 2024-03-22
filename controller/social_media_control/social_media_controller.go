@@ -47,6 +47,16 @@ func (smc *SocialMediaController) Create(ctx *gin.Context) {
 		return
 	}
 
+	if err := newSocialMedia.Validate(); err != nil {
+		var r common.Response = common.Response{
+			Success: false,
+			Message: "Please recheck your input : " + err.Error(),
+			Error:   err.Error(),
+		}
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, r)
+		return
+	}
+
 	newSocialMedia.UserId = userId
 	createdSocialMedia, err := smc.socialMediaRepository.Create(newSocialMedia)
 	if err != nil {
