@@ -39,6 +39,16 @@ func (uc *UserController) Register(ctx *gin.Context) {
 		return
 	}
 
+	if err := newUser.Validate(); err != nil {
+		var r common.Response = common.Response{
+			Success: false,
+			Message: "Please recheck your input : " + err.Error(),
+			Error:   err.Error(),
+		}
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, r)
+		return
+	}
+
 	// hash the password
 	hashedPassword, err := utils.Hash([]byte(newUser.Password))
 	if err != nil {
@@ -133,20 +143,14 @@ func (uc *UserController) Login(ctx *gin.Context) {
 
 func (uc *UserController) UpdateUser(ctx *gin.Context) {
 
-	claims, exist := ctx.Get("claims")
-	if !exist {
+	userId, err := utils.CheckTokenJWTAndReturnSub(ctx)
+	if err != nil {
 		var r common.Response = common.Response{
 			Success: false,
 			Message: "Unauthorized",
-			Error:   "unauthorized",
+			Error:   err.Error(),
 		}
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, r)
-		return
-	}
-
-	sub, err := utils.GetSubFromClaims(claims)
-	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusUnauthorized, common.CreateResponse(false, "Unauthorized", nil, "unauthorized"))
 		return
 	}
 
@@ -162,7 +166,7 @@ func (uc *UserController) UpdateUser(ctx *gin.Context) {
 		return
 	}
 	var id = ctx.Param("userId")
-	if id != sub.(string) {
+	if id != userId {
 		var r common.Response = common.Response{
 			Success: false,
 			Message: "Cannot Update other user",
@@ -200,24 +204,18 @@ func (uc *UserController) UpdateUser(ctx *gin.Context) {
 
 func (uc *UserController) DeleteUser(ctx *gin.Context) {
 
-	claims, exist := ctx.Get("claims")
-	if !exist {
+	userId, err := utils.CheckTokenJWTAndReturnSub(ctx)
+	if err != nil {
 		var r common.Response = common.Response{
 			Success: false,
 			Message: "Unauthorized",
-			Error:   "unauthorized",
+			Error:   err.Error(),
 		}
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, r)
 		return
 	}
 
-	sub, err := utils.GetSubFromClaims(claims)
-	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusUnauthorized, common.CreateResponse(false, "Unauthorized", nil, "unauthorized"))
-		return
-	}
-
-	err = uc.userRepository.DeleteUser(sub.(string))
+	err = uc.userRepository.DeleteUser(userId)
 	if err != nil {
 		var r common.Response = common.Response{
 			Success: false,

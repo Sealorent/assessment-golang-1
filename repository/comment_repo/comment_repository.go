@@ -34,8 +34,6 @@ func (ur *commentRepository) Create(comment model.Comment) (model.Comment, error
 		return model.Comment{}, tx.Error
 	}
 
-	// Return the created comment
-	// find comment by id
 	var createdComment model.Comment
 	tx = ur.db.Where("id = ?", comment.Id).Preload("User").Preload("Photo").First(&createdComment)
 	if tx.Error != nil {

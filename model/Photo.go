@@ -2,7 +2,10 @@ package model
 
 import (
 	"errors"
+	"strings"
 	"time"
+
+	"github.com/go-playground/validator/v10"
 )
 
 type Photo struct {
@@ -38,23 +41,23 @@ type PhotoReferComment struct {
 
 // Validate validates the Photo struct
 func (p *Photo) Validate() error {
+	var validationErrors []string
+	validate := validator.New()
 
-	var stringError string = ""
-
-	if p.Title == "" {
-		stringError += "title is required. "
+	if err := validate.Var(p.Title, "required"); err != nil {
+		validationErrors = append(validationErrors, "Title is required")
 	}
 
-	if p.PhotoUrl == "" {
-		stringError += "photo url is required. "
+	if err := validate.Var(p.PhotoUrl, "required"); err != nil {
+		validationErrors = append(validationErrors, "Photo url is required")
 	}
 
-	if p.UserID == "" {
-		stringError += "please sign-in. "
+	if err := validate.Var(p.UserID, "required"); err != nil {
+		validationErrors = append(validationErrors, "You must sign-in")
 	}
 
-	if stringError != "" {
-		return errors.New(stringError)
+	if len(validationErrors) > 0 {
+		return errors.New(strings.Join(validationErrors, "; "))
 	}
 
 	return nil

@@ -1,6 +1,8 @@
 package model
 
 import (
+	"errors"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -44,6 +46,28 @@ func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
 
 // Validate validates the User struct
 func (u *User) Validate() error {
+	var validationErrors []string
 	validate := validator.New()
-	return validate.Struct(u)
+
+	if err := validate.Var(u.Username, "required"); err != nil {
+		validationErrors = append(validationErrors, "Username is required")
+	}
+
+	if err := validate.Var(u.Email, "required,email"); err != nil {
+		validationErrors = append(validationErrors, "Email is required and must be valid")
+	}
+
+	if err := validate.Var(u.Password, "required,min=6"); err != nil {
+		validationErrors = append(validationErrors, "Password is required and must have at least 6 characters")
+	}
+
+	if err := validate.Var(u.Age, "required,min=8"); err != nil {
+		validationErrors = append(validationErrors, "Age is required and must be at least 8")
+	}
+
+	if len(validationErrors) > 0 {
+		return errors.New(strings.Join(validationErrors, "; "))
+	}
+
+	return nil
 }

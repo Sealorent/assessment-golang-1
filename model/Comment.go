@@ -8,7 +8,10 @@ package model
 
 import (
 	"errors"
+	"strings"
 	"time"
+
+	"github.com/go-playground/validator/v10"
 )
 
 type Comment struct {
@@ -53,15 +56,15 @@ type CommentResultUpdate struct {
 
 // Validate validates the Comment struct
 func (c *Comment) Validate() error {
+	var validationErrors []string
+	validate := validator.New()
 
-	var stringError string = ""
-
-	if c.Message == "" {
-		stringError += "message is required. "
+	if err := validate.Var(c.Message, "required"); err != nil {
+		validationErrors = append(validationErrors, "Message is required")
 	}
 
-	if stringError != "" {
-		return errors.New(stringError)
+	if len(validationErrors) > 0 {
+		return errors.New(strings.Join(validationErrors, "; "))
 	}
 
 	return nil

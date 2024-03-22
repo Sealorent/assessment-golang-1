@@ -10,7 +10,10 @@ package model
 
 import (
 	"errors"
+	"strings"
 	"time"
+
+	"github.com/go-playground/validator/v10"
 )
 
 type SocialMedia struct {
@@ -26,19 +29,19 @@ type SocialMedia struct {
 
 // Validate validates the SocialMedia struct
 func (s *SocialMedia) Validate() error {
+	var validationErrors []string
+	validate := validator.New()
 
-	var stringError string = ""
-
-	if s.Name == "" {
-		stringError += "name is required. "
+	if err := validate.Var(s.Name, "required"); err != nil {
+		validationErrors = append(validationErrors, "Name is required")
 	}
 
-	if s.SocialMediaUrl == "" {
-		stringError += "social media url is required. "
+	if err := validate.Var(s.SocialMediaUrl, "required"); err != nil {
+		validationErrors = append(validationErrors, "Social media url is required")
 	}
 
-	if stringError != "" {
-		return errors.New(stringError)
+	if len(validationErrors) > 0 {
+		return errors.New(strings.Join(validationErrors, "; "))
 	}
 
 	return nil
