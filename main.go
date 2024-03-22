@@ -58,7 +58,7 @@ func main() {
 
 	// USER
 	userGroup := ginEngine.Group("/users", middleware.AuthMiddleware)
-	userGroup.PUT("", userController.UpdateUser)
+	userGroup.PUT("/:userId", userController.UpdateUser)
 	userGroup.DELETE("", userController.DeleteUser)
 
 	// PHOTO

@@ -161,7 +161,7 @@ func (uc *UserController) UpdateUser(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, r)
 		return
 	}
-	var id = ctx.Query("userId")
+	var id = ctx.Param("userId")
 	if id != sub.(string) {
 		var r common.Response = common.Response{
 			Success: false,
