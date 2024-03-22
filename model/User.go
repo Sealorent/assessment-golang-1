@@ -62,7 +62,7 @@ func (u *User) Validate() error {
 	}
 
 	if err := validate.Var(u.Age, "required,min=9"); err != nil {
-		validationErrors = append(validationErrors, "Age is required and must be at least 8")
+		validationErrors = append(validationErrors, "Age is required and must be at least 9")
 	}
 
 	if len(validationErrors) > 0 {

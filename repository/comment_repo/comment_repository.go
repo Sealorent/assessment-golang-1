@@ -29,6 +29,16 @@ func (ur *commentRepository) Create(comment model.Comment) (model.Comment, error
 		return model.Comment{}, err
 	}
 
+	var photo model.Photo
+
+	if tx := ur.db.Where("id = ? AND status = true", comment.PhotoId).Preload("User").First(&photo); tx.Error != nil {
+		return model.Comment{}, errors.New("you can't comment on non-existent photo")
+	}
+
+	if !photo.User.Status {
+		return model.Comment{}, errors.New("photo owner has been deleted by the admin")
+	}
+
 	tx := ur.db.Create(&comment)
 	if tx.Error != nil {
 		return model.Comment{}, tx.Error
@@ -58,8 +68,15 @@ func (ur *commentRepository) Update(comment model.Comment, commentId string, use
 	// 1. Find comment by id
 	var existingComment model.Comment
 	if err := tx.Where("id = ? AND user_id = ? AND status = true", commentId, userId).First(&existingComment).Error; err != nil {
-		tx.Rollback()
 		return model.Comment{}, errors.New("comment not found or you don't have permission to update this comment")
+	}
+
+	if !existingComment.Photo.Status {
+		return model.Comment{}, errors.New("photo not found or has been deleted by the owner")
+	}
+
+	if !existingComment.User.Status {
+		return model.Comment{}, errors.New("comment owner has been deleted by the admin")
 	}
 
 	// 2. Update comment
@@ -105,6 +122,14 @@ func (cc *commentRepository) GetOne(commentId string) (model.Comment, error) {
 
 	if !comment.Status {
 		return model.Comment{}, errors.New("comment not found")
+	}
+
+	if !comment.Photo.Status {
+		return model.Comment{}, errors.New("photo not found or has been deleted by the owner")
+	}
+
+	if !comment.User.Status {
+		return model.Comment{}, errors.New("comment owner has been deleted by the admin")
 	}
 
 	return comment, nil
