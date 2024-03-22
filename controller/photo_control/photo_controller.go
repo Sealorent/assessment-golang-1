@@ -143,8 +143,20 @@ func (uc *PhotoController) FindAll(ctx *gin.Context) {
 			},
 		}
 
-		// Append the populated photoResult to the photoResults slice
-		photoResults = append(photoResults, photoResult)
+		if photos[i].User.Status {
+			photoResults = append(photoResults, photoResult)
+		}
+	}
+
+	var length int = len(photoResults)
+	if length == 0 {
+		var r common.Response = common.Response{
+			Success: false,
+			Message: "No photos found",
+			Error:   "No photos found",
+		}
+		ctx.JSON(http.StatusNotFound, r)
+		return
 	}
 
 	var r common.Response = common.CreateResponse(true, "Success", photoResults, "")

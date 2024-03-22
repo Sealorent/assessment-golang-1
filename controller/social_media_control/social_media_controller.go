@@ -136,8 +136,9 @@ func (smc *SocialMediaController) FindAll(ctx *gin.Context) {
 			},
 		}
 
-		// // Append the populated socialMediaResult to the socialMediaResults slice
-		socialMediaResults = append(socialMediaResults, socialMediaResult)
+		if socialMedia[i].User.Status {
+			socialMediaResults = append(socialMediaResults, socialMediaResult)
+		}
 	}
 
 	var length int = len(socialMediaResults)

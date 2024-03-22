@@ -153,7 +153,20 @@ func (cc *commentController) GetAll(ctx *gin.Context) {
 			},
 		}
 
-		commentResults = append(commentResults, commentResult)
+		if comments[i].User.Status && comments[i].Photo.Status {
+			commentResults = append(commentResults, commentResult)
+		}
+	}
+
+	var length int = len(commentResults)
+	if length == 0 {
+		var r common.Response = common.Response{
+			Success: false,
+			Message: "No comments found",
+			Error:   "No comments found",
+		}
+		ctx.JSON(http.StatusNotFound, r)
+		return
 	}
 
 	var r common.Response = common.Response{

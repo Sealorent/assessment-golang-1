@@ -105,6 +105,14 @@ func (ur *commentRepository) Update(comment model.Comment, commentId string, use
 func (cc *commentRepository) GetAll() ([]model.Comment, error) {
 	var comments []model.Comment
 	tx := cc.db.Where("status = ?", true).Preload("User").Preload("Photo").Find(&comments)
+	// tx := cc.db.Where("status = ?", true).
+	// 	// Preload("User", func(db *gorm.DB) *gorm.DB {
+	// 	// 	return db.Where("status = ?", true) // Filter users by status = true
+	// 	// }).
+	// 	// Preload("Photo", func(db *gorm.DB) *gorm.DB {
+	// 	// 	return db.Where("status = ?", true) // Filter photos by status = true
+	// 	// }).
+	// 	Find(&comments)
 	if tx.Error != nil {
 		return []model.Comment{}, tx.Error
 	}
