@@ -1,6 +1,6 @@
 # Build Stage
 # First pull Golang image
-FROM golang:1.17-alpine as build-env
+FROM golang:1.22.0 as build-env
  
 # Set environment variable
 ENV APP_NAME mygram
