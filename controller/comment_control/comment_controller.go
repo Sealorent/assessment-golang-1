@@ -22,6 +22,16 @@ func NewCommentController(commentRepository comment_repo.ICommentRepository) *Co
 }
 
 // CreateComment is a function to create a new comment
+// @Summary Create a new comment
+// @Schemes
+// @Description Create a new comment
+// @Tags Comments
+// @Accept json
+// @Produce json
+// @Param user body model.CommentCreateRequestSwaggo true "Comment Create Request"
+// @Success 200 {object} []common.Response
+// @Router /comments [post]
+// @Security Bearer
 func (cc *CommentController) CreateComment(ctx *gin.Context) {
 
 	userId, err := utils.CheckTokenJWTAndReturnSub(ctx)
@@ -96,6 +106,16 @@ func (cc *CommentController) CreateComment(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, r)
 }
 
+// GetAll is a function to get all comments
+// @Summary Get all comments
+// @Schemes
+// @Description Get all comments
+// @Tags Comments
+// @Accept json
+// @Produce json
+// @Success 200 {object} []common.Response
+// @Router /comments [get]
+// @Security Bearer
 func (cc *CommentController) GetAll(ctx *gin.Context) {
 	sub, err := utils.CheckTokenJWTAndReturnSub(ctx)
 	if err != nil {
@@ -176,9 +196,19 @@ func (cc *CommentController) GetAll(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, r)
-
 }
 
+// GetOne is a function to get a comment by id
+// @Summary Get a comment by id
+// @Schemes
+// @Description Get a comment by id
+// @Tags Comments
+// @Accept json
+// @Produce json
+// @Param commentId path string true "Comment ID"
+// @Success 200 {object} []common.Response
+// @Router /comments/{commentId} [get]
+// @Security Bearer
 func (cc *CommentController) GetOne(ctx *gin.Context) {
 	userId, err := utils.CheckTokenJWTAndReturnSub(ctx)
 	if err != nil {
@@ -244,6 +274,18 @@ func (cc *CommentController) GetOne(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, r)
 }
 
+// Update is a function to update a comment by id
+// @Summary Update a comment by id
+// @Schemes
+// @Description Update a comment by id
+// @Tags Comments
+// @Accept json
+// @Produce json
+// @Param commentId path string true "Comment ID"
+// @Param user body model.CommentUpdateRequestSwaggo true "Comment Update"
+// @Success 200 {object} []common.Response
+// @Router /comments/{commentId} [put]
+// @Security Bearer
 func (cc *CommentController) Update(ctx *gin.Context) {
 	userId, err := utils.CheckTokenJWTAndReturnSub(ctx)
 	if err != nil {
@@ -300,6 +342,17 @@ func (cc *CommentController) Update(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, r)
 }
 
+// Delete is a function to delete a comment by id
+// @Summary Delete a comment by id
+// @Schemes
+// @Description Delete a comment by id
+// @Tags Comments
+// @Accept json
+// @Produce json
+// @Param commentId path string true "Comment ID"
+// @Success 200 {object} []common.Response
+// @Router /comments/{commentId} [delete]
+// @Security Bearer
 func (cc *CommentController) Delete(ctx *gin.Context) {
 	userId, err := utils.CheckTokenJWTAndReturnSub(ctx)
 	if err != nil {

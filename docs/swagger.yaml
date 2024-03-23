@@ -9,6 +9,78 @@ definitions:
       success:
         type: boolean
     type: object
+  common.ResponseSocialMedia:
+    properties:
+      data:
+        $ref: '#/definitions/common.SocialMediaDTO'
+      error:
+        type: string
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  common.SocialMediaDTO:
+    properties:
+      social_medias: {}
+    type: object
+  model.CommentCreateRequestSwaggo:
+    properties:
+      message:
+        example: This is a comment message
+        type: string
+      photo_id:
+        example: 1
+        type: integer
+    type: object
+  model.CommentUpdateRequestSwaggo:
+    properties:
+      message:
+        example: This is a comment message
+        type: string
+    type: object
+  model.PhotoCreateRequestSwaggo:
+    properties:
+      caption:
+        example: example
+        type: string
+      photo_url:
+        example: www.example.com
+        type: string
+      title:
+        example: example
+        type: string
+    type: object
+  model.PhotoUpdateRequestSwaggo:
+    properties:
+      caption:
+        example: example
+        type: string
+      photo_url:
+        example: www.example.com
+        type: string
+      title:
+        example: example
+        type: string
+    type: object
+  model.SocialMediaCreateRequestSwaggo:
+    properties:
+      name:
+        example: Instagram
+        type: string
+      social_media_url:
+        example: www.instagram.com
+        type: string
+    type: object
+  model.SocialMediaUpdateRequestSwaggo:
+    properties:
+      name:
+        example: Instagram
+        type: string
+      social_media_url:
+        example: www.instagram.com
+        type: string
+    type: object
   model.UserLoginRequestSwaggo:
     properties:
       email:
@@ -74,7 +146,7 @@ paths:
             type: array
       summary: User Login
       tags:
-      - users
+      - Auth
   /auth/register:
     post:
       consumes:
@@ -98,7 +170,395 @@ paths:
             type: array
       summary: User Register
       tags:
-      - users
+      - Auth
+  /comments:
+    get:
+      consumes:
+      - application/json
+      description: Get all comments
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/common.Response'
+            type: array
+      security:
+      - Bearer: []
+      summary: Get all comments
+      tags:
+      - Comments
+    post:
+      consumes:
+      - application/json
+      description: Create a new comment
+      parameters:
+      - description: Comment Create Request
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.CommentCreateRequestSwaggo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/common.Response'
+            type: array
+      security:
+      - Bearer: []
+      summary: Create a new comment
+      tags:
+      - Comments
+  /comments/{commentId}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a comment by id
+      parameters:
+      - description: Comment ID
+        in: path
+        name: commentId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/common.Response'
+            type: array
+      security:
+      - Bearer: []
+      summary: Delete a comment by id
+      tags:
+      - Comments
+    get:
+      consumes:
+      - application/json
+      description: Get a comment by id
+      parameters:
+      - description: Comment ID
+        in: path
+        name: commentId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/common.Response'
+            type: array
+      security:
+      - Bearer: []
+      summary: Get a comment by id
+      tags:
+      - Comments
+    put:
+      consumes:
+      - application/json
+      description: Update a comment by id
+      parameters:
+      - description: Comment ID
+        in: path
+        name: commentId
+        required: true
+        type: string
+      - description: Comment Update
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.CommentUpdateRequestSwaggo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/common.Response'
+            type: array
+      security:
+      - Bearer: []
+      summary: Update a comment by id
+      tags:
+      - Comments
+  /photos:
+    get:
+      consumes:
+      - application/json
+      description: Get all photos
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/common.Response'
+            type: array
+      security:
+      - Bearer: []
+      summary: Get all photos
+      tags:
+      - Photos
+    post:
+      consumes:
+      - application/json
+      description: Create a new photo
+      parameters:
+      - description: Photo Create Request
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.PhotoCreateRequestSwaggo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/common.Response'
+            type: array
+      security:
+      - Bearer: []
+      summary: Create a new photo
+      tags:
+      - Photos
+  /photos/{photoId}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a photo
+      parameters:
+      - description: Photo ID
+        in: path
+        name: photoId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/common.Response'
+            type: array
+      security:
+      - Bearer: []
+      summary: Delete a photo
+      tags:
+      - Photos
+    get:
+      consumes:
+      - application/json
+      description: Get one photo
+      parameters:
+      - description: Photo ID
+        in: path
+        name: photoId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/common.Response'
+            type: array
+      security:
+      - Bearer: []
+      summary: Get one photo
+      tags:
+      - Photos
+    put:
+      consumes:
+      - application/json
+      description: Update a photo
+      parameters:
+      - description: Photo ID
+        in: path
+        name: photoId
+        required: true
+        type: string
+      - description: Photo Update
+        in: body
+        name: photo
+        required: true
+        schema:
+          $ref: '#/definitions/model.PhotoUpdateRequestSwaggo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/common.Response'
+            type: array
+      security:
+      - Bearer: []
+      summary: Update a photo
+      tags:
+      - Photos
+  /social-media:
+    get:
+      consumes:
+      - application/json
+      description: Find all social media
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/common.ResponseSocialMedia'
+            type: array
+      security:
+      - Bearer: []
+      summary: Find all social media
+      tags:
+      - Social Media
+    post:
+      consumes:
+      - application/json
+      description: Create a new social media
+      parameters:
+      - description: Social Media Create Request
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.SocialMediaCreateRequestSwaggo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/common.Response'
+            type: array
+      security:
+      - Bearer: []
+      summary: Create a new social media
+      tags:
+      - Social Media
+  /social-media/{socialMediaId}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a social media
+      parameters:
+      - description: Social Media ID
+        in: path
+        name: socialMediaId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/common.Response'
+            type: array
+      security:
+      - Bearer: []
+      summary: Delete a social media
+      tags:
+      - Social Media
+    get:
+      consumes:
+      - application/json
+      description: Find one social media
+      parameters:
+      - description: Social Media ID
+        in: path
+        name: socialMediaId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/common.Response'
+            type: array
+      security:
+      - Bearer: []
+      summary: Find one social media
+      tags:
+      - Social Media
+    put:
+      consumes:
+      - application/json
+      description: Update one social media
+      parameters:
+      - description: Social Media ID
+        in: path
+        name: socialMediaId
+        required: true
+        type: string
+      - description: Social Media Update Request
+        in: body
+        name: socialMedia
+        required: true
+        schema:
+          $ref: '#/definitions/model.SocialMediaUpdateRequestSwaggo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/common.Response'
+            type: array
+      security:
+      - Bearer: []
+      summary: Update one social media
+      tags:
+      - Social Media
+  /users:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/common.Response'
+            type: array
+      security:
+      - Bearer: []
+      summary: User Delete
+      tags:
+      - Users
   /users/{userId}:
     put:
       consumes:
@@ -129,7 +589,7 @@ paths:
       - Bearer: []
       summary: User Update
       tags:
-      - users
+      - Users
 securityDefinitions:
   Bearer:
     description: Type "Bearer" followed by a space and JWT token.

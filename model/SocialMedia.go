@@ -72,3 +72,13 @@ type SocialMediaResultUpdated struct {
 	UserId         string `json:"user_id"`
 	UpdatedAt      string `json:"updated_at"`
 }
+
+type SocialMediaCreateRequestSwaggo struct {
+	Name           string `json:"name" example:"Instagram"`
+	SocialMediaUrl string `json:"social_media_url" example:"www.instagram.com"`
+}
+
+type SocialMediaUpdateRequestSwaggo struct {
+	Name           string `json:"name" example:"Instagram"`
+	SocialMediaUrl string `json:"social_media_url" example:"www.instagram.com"`
+}

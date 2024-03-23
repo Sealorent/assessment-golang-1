@@ -1,6 +1,7 @@
 package user_repo
 
 import (
+	"errors"
 	"final_project/model"
 
 	"gorm.io/gorm"
@@ -34,8 +35,16 @@ func (ur *userRepository) Register(newUser model.User) (model.User, error) {
 
 func (ur *userRepository) UserByEmail(email string) (model.User, error) {
 	var user model.User
-	tx := ur.db.Where("status = ?", true).First(&user, "email = ?", email)
-	return user, tx.Error
+	tx := ur.db.First(&user, "email = ?", email)
+	if tx.Error != nil {
+		return model.User{}, tx.Error
+	}
+
+	if !user.Status {
+		return model.User{}, errors.New("user is deleted")
+	}
+
+	return user, nil
 }
 
 func (ur *userRepository) UpdateUser(updateUser model.User, id string) (model.User, error) {
