@@ -1,29 +1,34 @@
 # Build Stage
-# First pull Golang image
 FROM golang:1.22.0 as build-env
- 
-# Set environment variable
+
+# Set environment variables
 ENV APP_NAME mygram
 ENV CMD_PATH main.go
- 
-# Copy application data into image
+
+# Copy application data into the image
 COPY . $GOPATH/src/$APP_NAME
 WORKDIR $GOPATH/src/$APP_NAME
- 
-# Budild application
-RUN CGO_ENABLED=0 go build -v -o /$APP_NAME $GOPATH/src/$APP_NAME/$CMD_PATH
- 
+
+# Build the Go application
+RUN CGO_ENABLED=0 go build -v -o /$APP_NAME $CMD_PATH
+
 # Run Stage
 FROM alpine:3.14
- 
-# Set environment variable
-ENV APP_NAME sample-dockerize-app
- 
-# Copy only required data into this image
-COPY --from=build-env /$APP_NAME .
- 
+
+# Set environment variables
+ENV APP_NAME mygram
+
+# Set up the working directory
+WORKDIR /app
+
+# Copy SSL certificates from the build stage
+COPY --from=build-env /etc/ssl/certs /etc/ssl/certs
+
+# Copy the built executable from the build stage
+COPY --from=build-env /$APP_NAME /app/
+
 # Expose application port
 EXPOSE 9091
- 
-# Start app
+
+# Start the application
 CMD ./$APP_NAME
