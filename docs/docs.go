@@ -129,7 +129,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.UserRegisterRequestSwaggo"
+                            "$ref": "#/definitions/model.UserUpdateRequestSwaggo"
                         }
                     }
                 ],
@@ -165,50 +165,57 @@ const docTemplate = `{
         },
         "model.UserLoginRequestSwaggo": {
             "type": "object",
-            "required": [
-                "email",
-                "password"
-            ],
             "properties": {
                 "email": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "viky@gmail.com"
                 },
                 "password": {
                     "type": "string",
-                    "minLength": 6
+                    "example": "password"
                 }
             }
         },
         "model.UserRegisterRequestSwaggo": {
             "type": "object",
-            "required": [
-                "age",
-                "email",
-                "password",
-                "username"
-            ],
             "properties": {
                 "age": {
                     "type": "integer",
-                    "minimum": 9
+                    "example": 20
                 },
                 "email": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "viky@gmail.com"
                 },
                 "password": {
                     "type": "string",
-                    "minLength": 6
+                    "example": "password"
                 },
                 "username": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "viky"
+                }
+            }
+        },
+        "model.UserUpdateRequestSwaggo": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "xxx@gmail.com"
+                },
+                "username": {
+                    "type": "string",
+                    "example": "xxx"
                 }
             }
         }
     },
     "securityDefinitions": {
-        "Bearer JWT Token": {
+        "Bearer": {
+            "description": "Type \"Bearer\" followed by a space and JWT token.",
             "type": "apiKey",
-            "name": "Bearer",
+            "name": "Authorization",
             "in": "header"
         }
     }

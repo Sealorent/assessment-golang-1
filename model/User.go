@@ -22,18 +22,6 @@ type User struct {
 	Status    bool      `json:"status" gorm:"default:true"`
 }
 
-type UserRegisterRequestSwaggo struct {
-	Email    string `json:"email" validate:"required,email"`
-	Username string `json:"username" validate:"required"`
-	Password string `json:"password" validate:"required,min=6"`
-	Age      uint   `json:"age" validate:"required,min=9"`
-}
-
-type UserLoginRequestSwaggo struct {
-	Email    string `json:"email" validate:"required,email"`
-	Password string `json:"password" validate:"required,min=6"`
-}
-
 type UserRefer struct {
 	Email    string `json:"email"`
 	Username string `json:"username"`
@@ -82,4 +70,23 @@ func (u *User) Validate() error {
 	}
 
 	return nil
+}
+
+// UserRegisterRequestSwaggo is the struct for the user register request
+type UserRegisterRequestSwaggo struct {
+	Email    string `json:"email" example:"viky@gmail.com"`
+	Username string `json:"username" example:"viky"`
+	Password string `json:"password" example:"password"`
+	Age      uint   `json:"age" example:"20"`
+}
+
+// UserLoginRequestSwaggo is the struct for the user login request
+type UserLoginRequestSwaggo struct {
+	Email    string `json:"email" example:"viky@gmail.com"`
+	Password string `json:"password" example:"password"`
+}
+
+type UserUpdateRequestSwaggo struct {
+	Email    string `json:"email" example:"xxx@gmail.com"`
+	Username string `json:"username" example:"xxx"`
 }

@@ -18,10 +18,10 @@ import (
 
 // @license.name  Apache 2.0
 // @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
-// @securityDefinitions.apikey Bearer JWT Token
+// @securityDefinitions.apikey Bearer
 // @in header
-// @name Bearer
-
+// @name Authorization
+// @description Type "Bearer" followed by a space and JWT token.
 func main() {
 	// Load .env file
 	if os.Getenv("ENV") != "production" {

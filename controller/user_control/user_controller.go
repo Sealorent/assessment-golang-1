@@ -24,7 +24,7 @@ func NewUserController(userRepository user_repo.IUserRepository) *UserController
 
 // Register is a function to register a new user
 // @Summary User Register
-// @Schemes
+// @Schemes http https
 // @Description Register a new user
 // @Tags users
 // @Accept json
@@ -168,11 +168,11 @@ func (uc *UserController) Login(ctx *gin.Context) {
 // @Tags users
 // @Accept json
 // @Produce json
-// @Security Bearer
 // @Param userId path string true "User ID"
-// @Param user body model.UserRegisterRequestSwaggo true "User Update"
+// @Param user body model.UserUpdateRequestSwaggo true "User Update"
 // @Success 200 {object} []common.Response
 // @Router /users/{userId} [put]
+// @Security Bearer
 func (uc *UserController) UpdateUser(ctx *gin.Context) {
 
 	userId, err := utils.CheckTokenJWTAndReturnSub(ctx)

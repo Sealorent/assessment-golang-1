@@ -12,31 +12,35 @@ definitions:
   model.UserLoginRequestSwaggo:
     properties:
       email:
+        example: viky@gmail.com
         type: string
       password:
-        minLength: 6
+        example: password
         type: string
-    required:
-    - email
-    - password
     type: object
   model.UserRegisterRequestSwaggo:
     properties:
       age:
-        minimum: 9
+        example: 20
         type: integer
       email:
+        example: viky@gmail.com
         type: string
       password:
-        minLength: 6
+        example: password
         type: string
       username:
+        example: viky
         type: string
-    required:
-    - age
-    - email
-    - password
-    - username
+    type: object
+  model.UserUpdateRequestSwaggo:
+    properties:
+      email:
+        example: xxx@gmail.com
+        type: string
+      username:
+        example: xxx
+        type: string
     type: object
 info:
   contact:
@@ -111,7 +115,7 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/model.UserRegisterRequestSwaggo'
+          $ref: '#/definitions/model.UserUpdateRequestSwaggo'
       produces:
       - application/json
       responses:
@@ -127,8 +131,9 @@ paths:
       tags:
       - users
 securityDefinitions:
-  Bearer JWT Token:
+  Bearer:
+    description: Type "Bearer" followed by a space and JWT token.
     in: header
-    name: Bearer
+    name: Authorization
     type: apiKey
 swagger: "2.0"
