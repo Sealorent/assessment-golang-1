@@ -20,17 +20,6 @@ func NewPhotoController(photoRepository photo_repo.IPhotoRepository) *PhotoContr
 	}
 }
 
-// Create is a function to create a new photo
-// @Summary Create a new photo
-// @Schemes
-// @Description Create a new photo
-// @Tags Photos
-// @Accept json
-// @Produce json
-// @Param user body model.PhotoCreateRequestSwaggo true "Photo Create Request"
-// @Success 200 {object} []common.Response
-// @Router /photos [post]
-// @Security Bearer
 func (uc *PhotoController) Create(ctx *gin.Context) {
 
 	userId, err := utils.CheckTokenJWTAndReturnSub(ctx)
@@ -105,16 +94,6 @@ func (uc *PhotoController) Create(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, r)
 }
 
-// GetAll is a function to get all photos
-// @Summary Get all photos
-// @Schemes
-// @Description Get all photos
-// @Tags Photos
-// @Accept json
-// @Produce json
-// @Success 200 {object} []common.Response
-// @Router /photos [get]
-// @Security Bearer
 func (uc *PhotoController) FindAll(ctx *gin.Context) {
 	userId, err := utils.CheckTokenJWTAndReturnSub(ctx)
 	if err != nil {
@@ -184,17 +163,6 @@ func (uc *PhotoController) FindAll(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, r)
 }
 
-// GetAll is a function to get one photo
-// @Summary Get one photo
-// @Schemes
-// @Description Get one photo
-// @Tags Photos
-// @Accept json
-// @Produce json
-// @Param photoId path string true "Photo ID"
-// @Success 200 {object} []common.Response
-// @Router /photos/{photoId} [get]
-// @Security Bearer
 func (uc *PhotoController) FindOne(ctx *gin.Context) {
 
 	userId, err := utils.CheckTokenJWTAndReturnSub(ctx)
@@ -257,18 +225,6 @@ func (uc *PhotoController) FindOne(ctx *gin.Context) {
 
 }
 
-// UpdateOne is a function to update a photo
-// @Summary Update a photo
-// @Schemes
-// @Description Update a photo
-// @Tags Photos
-// @Accept json
-// @Produce json
-// @Param photoId path string true "Photo ID"
-// @Param photo body model.PhotoUpdateRequestSwaggo true "Photo Update"
-// @Success 200 {object} []common.Response
-// @Router /photos/{photoId} [put]
-// @Security Bearer
 func (uc *PhotoController) UpdateOne(ctx *gin.Context) {
 	userId, err := utils.CheckTokenJWTAndReturnSub(ctx)
 	if err != nil {
@@ -327,19 +283,9 @@ func (uc *PhotoController) UpdateOne(ctx *gin.Context) {
 	var r common.Response = common.CreateResponse(true, "Photo updated successfully", response, "")
 
 	ctx.JSON(http.StatusOK, r)
+
 }
 
-// Delete is a function to delete a photo
-// @Summary Delete a photo
-// @Schemes
-// @Description Delete a photo
-// @Tags Photos
-// @Accept json
-// @Produce json
-// @Param photoId path string true "Photo ID"
-// @Success 200 {object} []common.Response
-// @Router /photos/{photoId} [delete]
-// @Security Bearer
 func (uc *PhotoController) Delete(ctx *gin.Context) {
 	userId, err := utils.CheckTokenJWTAndReturnSub(ctx)
 	if err != nil {
@@ -367,4 +313,5 @@ func (uc *PhotoController) Delete(ctx *gin.Context) {
 	var r common.Response = common.CreateResponse(true, "Photo deleted successfully", nil, "")
 
 	ctx.JSON(http.StatusOK, r)
+
 }

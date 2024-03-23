@@ -58,15 +58,3 @@ func (p *Photo) Validate() error {
 
 	return nil
 }
-
-type PhotoCreateRequestSwaggo struct {
-	Title    string `json:"title" example:"example"`
-	Caption  string `json:"caption" example:"example"`
-	PhotoUrl string `json:"photo_url" example:"www.example.com"`
-}
-
-type PhotoUpdateRequestSwaggo struct {
-	Title    string `json:"title" example:"example"`
-	Caption  string `json:"caption" example:"example"`
-	PhotoUrl string `json:"photo_url" example:"www.example.com"`
-}

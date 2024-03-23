@@ -20,17 +20,6 @@ func NewSocialMediaController(socialMediaRepository social_media_repo.ISocialMed
 	}
 }
 
-// Create is a function to create a new social media
-// @Summary Create a new social media
-// @Schemes
-// @Description Create a new social media
-// @Tags Social Media
-// @Accept json
-// @Produce json
-// @Param user body model.SocialMediaCreateRequestSwaggo true "Social Media Create Request"
-// @Success 200 {object} []common.Response
-// @Router /social-media [post]
-// @Security Bearer
 func (smc *SocialMediaController) Create(ctx *gin.Context) {
 	userId, err := utils.CheckTokenJWTAndReturnSub(ctx)
 	if err != nil {
@@ -95,18 +84,9 @@ func (smc *SocialMediaController) Create(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusCreated, r)
+
 }
 
-// FindAll is a function to find all social media
-// @Summary Find all social media
-// @Schemes
-// @Description Find all social media
-// @Tags Social Media
-// @Accept json
-// @Produce json
-// @Success 200 {object} []common.ResponseSocialMedia
-// @Router /social-media [get]
-// @Security Bearer
 func (smc *SocialMediaController) FindAll(ctx *gin.Context) {
 	userId, err := utils.CheckTokenJWTAndReturnSub(ctx)
 	if err != nil {
@@ -182,17 +162,6 @@ func (smc *SocialMediaController) FindAll(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, r)
 }
 
-// FindOne is a function to find one social media
-// @Summary Find one social media
-// @Schemes
-// @Description Find one social media
-// @Tags Social Media
-// @Accept json
-// @Produce json
-// @Param socialMediaId path string true "Social Media ID"
-// @Success 200 {object} []common.Response
-// @Router /social-media/{socialMediaId} [get]
-// @Security Bearer
 func (smc *SocialMediaController) FindOne(ctx *gin.Context) {
 	userId, err := utils.CheckTokenJWTAndReturnSub(ctx)
 	if err != nil {
@@ -247,20 +216,9 @@ func (smc *SocialMediaController) FindOne(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, r)
+
 }
 
-// UpdateOne is a function to update one social media
-// @Summary Update one social media
-// @Schemes
-// @Description Update one social media
-// @Tags Social Media
-// @Accept json
-// @Produce json
-// @Param socialMediaId path string true "Social Media ID"
-// @Param socialMedia body model.SocialMediaUpdateRequestSwaggo true "Social Media Update Request"
-// @Success 200 {object} []common.Response
-// @Router /social-media/{socialMediaId} [put]
-// @Security Bearer
 func (smc *SocialMediaController) UpdateOne(ctx *gin.Context) {
 	userId, err := utils.CheckTokenJWTAndReturnSub(ctx)
 	if err != nil {
@@ -312,19 +270,9 @@ func (smc *SocialMediaController) UpdateOne(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, r)
+
 }
 
-// Delete is a function to delete a social media
-// @Summary Delete a social media
-// @Schemes
-// @Description Delete a social media
-// @Tags Social Media
-// @Accept json
-// @Produce json
-// @Param socialMediaId path string true "Social Media ID"
-// @Success 200 {object} []common.Response
-// @Router /social-media/{socialMediaId} [delete]
-// @Security Bearer
 func (smc *SocialMediaController) Delete(ctx *gin.Context) {
 	userId, err := utils.CheckTokenJWTAndReturnSub(ctx)
 	if err != nil {
@@ -355,4 +303,5 @@ func (smc *SocialMediaController) Delete(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, r)
+
 }

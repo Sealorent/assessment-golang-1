@@ -26,7 +26,7 @@ func NewUserController(userRepository user_repo.IUserRepository) *UserController
 // @Summary User Register
 // @Schemes http https
 // @Description Register a new user
-// @Tags Auth
+// @Tags users
 // @Accept json
 // @Produce json
 // @Param user body model.UserRegisterRequestSwaggo true "User Register"
@@ -100,7 +100,7 @@ func (uc *UserController) Register(ctx *gin.Context) {
 // @Summary User Login
 // @Schemes
 // @Description Login a user
-// @Tags Auth
+// @Tags users
 // @Accept json
 // @Produce json
 // @Param user body model.UserLoginRequestSwaggo true "User Login"
@@ -124,7 +124,7 @@ func (uc *UserController) Login(ctx *gin.Context) {
 	if err != nil {
 		var r common.Response = common.Response{
 			Success: false,
-			Message: err.Error(),
+			Message: "Data Not Found",
 			Error:   err.Error(),
 		}
 		ctx.AbortWithStatusJSON(http.StatusNotFound, r)
@@ -165,7 +165,7 @@ func (uc *UserController) Login(ctx *gin.Context) {
 // @Summary User Update
 // @Schemes
 // @Description Update a user
-// @Tags Users
+// @Tags users
 // @Accept json
 // @Produce json
 // @Param userId path string true "User ID"
@@ -234,16 +234,6 @@ func (uc *UserController) UpdateUser(ctx *gin.Context) {
 
 }
 
-// DeleteUser is a function to delete a user
-// @Summary User Delete
-// @Schemes
-// @Description Delete a user
-// @Tags Users
-// @Accept json
-// @Produce json
-// @Success 200 {object} []common.Response
-// @Router /users [delete]
-// @Security Bearer
 func (uc *UserController) DeleteUser(ctx *gin.Context) {
 
 	userId, err := utils.CheckTokenJWTAndReturnSub(ctx)

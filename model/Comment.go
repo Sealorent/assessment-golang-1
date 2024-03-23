@@ -69,12 +69,3 @@ func (c *Comment) Validate() error {
 
 	return nil
 }
-
-type CommentCreateRequestSwaggo struct {
-	Message string `json:"message" example:"This is a comment message"`
-	PhotoId uint   `json:"photo_id" example:"1"`
-}
-
-type CommentUpdateRequestSwaggo struct {
-	Message string `json:"message" example:"This is a comment message"`
-}
