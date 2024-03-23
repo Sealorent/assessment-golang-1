@@ -18,6 +18,10 @@ import (
 
 // @license.name  Apache 2.0
 // @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
+// @securityDefinitions.apikey Bearer JWT Token
+// @in header
+// @name Bearer
+
 func main() {
 	// Load .env file
 	if os.Getenv("ENV") != "production" {
@@ -25,7 +29,6 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-
 	}
 
 	// Setup Database

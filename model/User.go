@@ -29,6 +29,11 @@ type UserRegisterRequestSwaggo struct {
 	Age      uint   `json:"age" validate:"required,min=9"`
 }
 
+type UserLoginRequestSwaggo struct {
+	Email    string `json:"email" validate:"required,email"`
+	Password string `json:"password" validate:"required,min=6"`
+}
+
 type UserRefer struct {
 	Email    string `json:"email"`
 	Username string `json:"username"`

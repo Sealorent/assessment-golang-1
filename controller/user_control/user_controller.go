@@ -96,6 +96,16 @@ func (uc *UserController) Register(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, response)
 }
 
+// Login is a function to login a user
+// @Summary User Login
+// @Schemes
+// @Description Login a user
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param user body model.UserLoginRequestSwaggo true "User Login"
+// @Success 200 {object} []common.Response
+// @Router /auth/login [post]
 func (uc *UserController) Login(ctx *gin.Context) {
 	var requestedUser model.User
 
@@ -151,6 +161,18 @@ func (uc *UserController) Login(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, r)
 }
 
+// UpdateUser is a function to update a user
+// @Summary User Update
+// @Schemes
+// @Description Update a user
+// @Tags users
+// @Accept json
+// @Produce json
+// @Security Bearer
+// @Param userId path string true "User ID"
+// @Param user body model.UserRegisterRequestSwaggo true "User Update"
+// @Success 200 {object} []common.Response
+// @Router /users/{userId} [put]
 func (uc *UserController) UpdateUser(ctx *gin.Context) {
 
 	userId, err := utils.CheckTokenJWTAndReturnSub(ctx)
