@@ -22,6 +22,13 @@ type User struct {
 	Status    bool      `json:"status" gorm:"default:true"`
 }
 
+type UserRegisterRequestSwaggo struct {
+	Email    string `json:"email" validate:"required,email"`
+	Username string `json:"username" validate:"required"`
+	Password string `json:"password" validate:"required,min=6"`
+	Age      uint   `json:"age" validate:"required,min=9"`
+}
+
 type UserRefer struct {
 	Email    string `json:"email"`
 	Username string `json:"username"`

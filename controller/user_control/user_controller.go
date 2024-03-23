@@ -22,6 +22,16 @@ func NewUserController(userRepository user_repo.IUserRepository) *UserController
 	}
 }
 
+// Register is a function to register a new user
+// @Summary User Register
+// @Schemes
+// @Description Register a new user
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param user body model.UserRegisterRequestSwaggo true "User"
+// @Success 200 {object} []common.Response
+// @Router /auth/register [post]
 func (uc *UserController) Register(ctx *gin.Context) {
 
 	// map input to user struct

@@ -11,18 +11,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type commentController struct {
+type CommentController struct {
 	commentRepository comment_repo.ICommentRepository
 }
 
-func NewCommentController(commentRepository comment_repo.ICommentRepository) *commentController {
-	return &commentController{
+func NewCommentController(commentRepository comment_repo.ICommentRepository) *CommentController {
+	return &CommentController{
 		commentRepository: commentRepository,
 	}
 }
 
 // CreateComment is a function to create a new comment
-func (cc *commentController) CreateComment(ctx *gin.Context) {
+func (cc *CommentController) CreateComment(ctx *gin.Context) {
 
 	userId, err := utils.CheckTokenJWTAndReturnSub(ctx)
 	if err != nil {
@@ -96,7 +96,7 @@ func (cc *commentController) CreateComment(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, r)
 }
 
-func (cc *commentController) GetAll(ctx *gin.Context) {
+func (cc *CommentController) GetAll(ctx *gin.Context) {
 	sub, err := utils.CheckTokenJWTAndReturnSub(ctx)
 	if err != nil {
 		var r common.Response = common.Response{
@@ -179,7 +179,7 @@ func (cc *commentController) GetAll(ctx *gin.Context) {
 
 }
 
-func (cc *commentController) GetOne(ctx *gin.Context) {
+func (cc *CommentController) GetOne(ctx *gin.Context) {
 	userId, err := utils.CheckTokenJWTAndReturnSub(ctx)
 	if err != nil {
 		var r common.Response = common.Response{
@@ -244,7 +244,7 @@ func (cc *commentController) GetOne(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, r)
 }
 
-func (cc *commentController) Update(ctx *gin.Context) {
+func (cc *CommentController) Update(ctx *gin.Context) {
 	userId, err := utils.CheckTokenJWTAndReturnSub(ctx)
 	if err != nil {
 		var r common.Response = common.Response{
@@ -300,7 +300,7 @@ func (cc *commentController) Update(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, r)
 }
 
-func (cc *commentController) Delete(ctx *gin.Context) {
+func (cc *CommentController) Delete(ctx *gin.Context) {
 	userId, err := utils.CheckTokenJWTAndReturnSub(ctx)
 	if err != nil {
 		var r common.Response = common.Response{

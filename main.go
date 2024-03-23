@@ -1,88 +1,38 @@
 package main
 
 import (
-	"final_project/controller/comment_control"
-	"final_project/controller/photo_control"
-	"final_project/controller/social_media_control"
-	"final_project/controller/user_control"
-	"final_project/lib"
-	"final_project/middleware"
-	"final_project/model"
-	"final_project/repository/comment_repo"
-	"final_project/repository/photo_repo"
-	"final_project/repository/social_media_repo"
-	"final_project/repository/user_repo"
 	"fmt"
 	"os"
 	"strconv"
 
-	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+
+	docs "final_project/docs"
 )
 
+// @contact.name   API Support
+// @contact.url    http://www.swagger.io/support
+// @contact.email  support@swagger.io
+
+// @license.name  Apache 2.0
+// @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
 func main() {
 	// Load .env file
-	// // err := godotenv.Load()
-	// if err != nil {
-	// 	panic(err)
-	// }
-
-	// gorm connection
-	db, err := lib.InitDB()
+	err := godotenv.Load()
 	if err != nil {
 		panic(err)
 	}
 
-	// migrate the schema
-	err = db.AutoMigrate(&model.User{}, &model.Photo{}, &model.Comment{}, &model.SocialMedia{})
-	if err != nil {
-		panic(err)
-	}
-	// USER
-	userRepository := user_repo.NewUserRepository(db)
-	userController := user_control.NewUserController(userRepository)
-	// PHOTO
-	photoRepository := photo_repo.NewPhotoRepository(db)
-	photoController := photo_control.NewPhotoController(photoRepository)
-	// COMMENT
-	commentRepository := comment_repo.NewCommentRepository(db)
-	commentController := comment_control.NewCommentController(commentRepository)
-	// SOCIAL MEDIA
-	socialMediaRepository := social_media_repo.NewSocialMediaRepository(db)
-	socialMediaController := social_media_control.NewSocialMediaController(socialMediaRepository)
+	// Setup Database
+	db := SetupDB()
 
-	// ROUTES
-	ginEngine := gin.Default()
-	ginEngine.POST("/auth/register", userController.Register)
-	ginEngine.POST("/auth/login", userController.Login)
+	// Setup features
+	features := NewSetupFeatures(db)
 
-	// USER
-	userGroup := ginEngine.Group("/users", middleware.AuthMiddleware)
-	userGroup.PUT("/:userId", userController.UpdateUser)
-	userGroup.DELETE("", userController.DeleteUser)
-
-	// PHOTO
-	photoGroup := ginEngine.Group("/photos", middleware.AuthMiddleware)
-	photoGroup.POST("", photoController.Create)
-	photoGroup.GET("", photoController.FindAll)
-	photoGroup.GET("/:photoId", photoController.FindOne)
-	photoGroup.PUT("/:photoId", photoController.UpdateOne)
-	photoGroup.DELETE("/:photoId", photoController.Delete)
-
-	// COMMENT
-	commentGroup := ginEngine.Group("/comments", middleware.AuthMiddleware)
-	commentGroup.POST("", commentController.CreateComment)
-	commentGroup.GET("", commentController.GetAll)
-	commentGroup.GET("/:commentId", commentController.GetOne)
-	commentGroup.PUT("/:commentId", commentController.Update)
-	commentGroup.DELETE("/:commentId", commentController.Delete)
-
-	// SOCIAL MEDIA
-	socialMediaGroup := ginEngine.Group("/social-media", middleware.AuthMiddleware)
-	socialMediaGroup.POST("", socialMediaController.Create)
-	socialMediaGroup.GET("", socialMediaController.FindAll)
-	socialMediaGroup.GET("/:socialMediaId", socialMediaController.FindOne)
-	socialMediaGroup.PUT("/:socialMediaId", socialMediaController.UpdateOne)
-	socialMediaGroup.DELETE("/:socialMediaId", socialMediaController.Delete)
+	// Setup routes
+	ginEngine := SetupRoutes(features)
 
 	// Host and port
 	serverHost := os.Getenv("SERVER_HOST")
@@ -92,7 +42,18 @@ func main() {
 		panic(err)
 	}
 
+	// Address
 	addr := fmt.Sprintf("%s:%d", serverHost, port)
+
+	// Swagger
+	docs.SwaggerInfo.Title = "MyGram"
+	docs.SwaggerInfo.Description = "This is a sample server Petstore server."
+	docs.SwaggerInfo.Version = "1.0"
+	docs.SwaggerInfo.Host = addr
+	docs.SwaggerInfo.Schemes = []string{"http", "https"}
+	ginEngine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+	// Run the server
 	ginEngine.Run(addr)
 
 }
