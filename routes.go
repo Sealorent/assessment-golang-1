@@ -3,6 +3,7 @@ package main
 
 import (
 	"final_project/middleware"
+	"final_project/views"
 
 	"github.com/gin-gonic/gin"
 )
@@ -11,6 +12,12 @@ func SetupRoutes(
 	controllers *SetupFeatures,
 ) *gin.Engine {
 	ginEngine := gin.Default()
+
+	//INDEX
+	ginEngine.GET("/", func(c *gin.Context) {
+		// Call the Index function directly
+		views.Index(c.Writer, c.Request)
+	})
 
 	// AUTH
 	ginEngine.POST("/auth/register", controllers.UserController.Register)
