@@ -20,9 +20,12 @@ import (
 // @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
 func main() {
 	// Load .env file
-	err := godotenv.Load()
-	if err != nil {
-		panic(err)
+	if os.Getenv("ENV") != "production" {
+		err := godotenv.Load()
+		if err != nil {
+			panic(err)
+		}
+
 	}
 
 	// Setup Database

@@ -29,7 +29,7 @@ func NewUserController(userRepository user_repo.IUserRepository) *UserController
 // @Tags users
 // @Accept json
 // @Produce json
-// @Param user body model.UserRegisterRequestSwaggo true "User"
+// @Param user body model.UserRegisterRequestSwaggo true "User Register"
 // @Success 200 {object} []common.Response
 // @Router /auth/register [post]
 func (uc *UserController) Register(ctx *gin.Context) {

@@ -38,7 +38,7 @@ const docTemplate = `{
                 "summary": "User Register",
                 "parameters": [
                     {
-                        "description": "User",
+                        "description": "User Register",
                         "name": "user",
                         "in": "body",
                         "required": true,

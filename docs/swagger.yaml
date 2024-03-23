@@ -42,7 +42,7 @@ paths:
       - application/json
       description: Register a new user
       parameters:
-      - description: User
+      - description: User Register
         in: body
         name: user
         required: true
