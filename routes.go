@@ -14,10 +14,7 @@ func SetupRoutes(
 	ginEngine := gin.Default()
 
 	//INDEX
-	ginEngine.GET("/", func(c *gin.Context) {
-		// Call the Index function directly
-		views.Index(c.Writer, c.Request)
-	})
+	ginEngine.GET("/", views.Index)
 
 	// AUTH
 	ginEngine.POST("/auth/register", controllers.UserController.Register)

@@ -4,24 +4,26 @@ import (
 	"html/template"
 	"net/http"
 	"path"
+
+	"github.com/gin-gonic/gin"
 )
 
-func Index(w http.ResponseWriter, r *http.Request) {
+func Index(c *gin.Context) {
 	var filepath = path.Join("views", "index.html")
 	var tmpl, err = template.ParseFiles(filepath)
 	if err != nil {
 		http.Error(
-			w,
+			c.Writer,
 			err.Error(),
 			http.StatusInternalServerError,
 		)
 		return
 	}
 
-	err = tmpl.Execute(w, nil)
+	err = tmpl.Execute(c.Writer, nil)
 	if err != nil {
 		http.Error(
-			w,
+			c.Writer,
 			err.Error(),
 			http.StatusInternalServerError,
 		)
