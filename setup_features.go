@@ -21,6 +21,7 @@ type SetupFeatures struct {
 }
 
 func NewSetupFeatures(db *gorm.DB) *SetupFeatures {
+	
 	userRepository := user_repo.NewUserRepository(db)
 	userController := user_control.NewUserController(userRepository)
 

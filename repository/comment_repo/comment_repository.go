@@ -67,7 +67,7 @@ func (ur *commentRepository) Update(comment model.Comment, commentId string, use
 
 	// 1. Find comment by id
 	var existingComment model.Comment
-	if err := tx.Where("id = ? AND user_id = ? AND status = true", commentId, userId).First(&existingComment).Error; err != nil {
+	if err := tx.Where("id = ? AND user_id = ? AND status = true", commentId, userId).Preload("Photo").Preload("User").First(&existingComment).Error; err != nil {
 		return model.Comment{}, errors.New("comment not found or you don't have permission to update this comment")
 	}
 
